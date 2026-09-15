@@ -25,14 +25,18 @@ npx serve -p 5173 .
 - Recorde salvo no `localStorage`
 - Efeitos sonoros gerados via WebAudio (sem arquivos de áudio)
 - Paralaxe de nuvens e prédios no fundo
+- **Ciclo dia/noite**: o céu escurece a cada 10 pontos, com estrelas piscando
+- **Medalhas** no game over: bronze (10), prata (20), ouro (30) e platina (40)
 - Funciona no celular (toque)
 
 ## Estrutura
 
 ```
-index.html   # marcação
-style.css    # layout da página
-game.js      # toda a lógica do jogo
+index.html      # marcação
+style.css       # layout da página
+game.js         # lógica principal do jogo
+js/medals.js    # medalhas por pontuação
+js/theme.js     # ciclo dia/noite e estrelas
 ```
 
 ## Licença
