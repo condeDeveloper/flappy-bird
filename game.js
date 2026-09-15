@@ -80,6 +80,7 @@
   function update(dt) {
     time += dt;
     bird.wing = Math.max(0, bird.wing - dt * 4);
+    updateTheme(score, dt);
 
     if (state === STATE.READY) {
       bird.y = H * 0.45 + Math.sin(time * 4) * 8;
@@ -125,13 +126,15 @@
 
   // ---------- Render ----------
   function draw() {
-    // Céu
+    // Céu (dia/noite conforme a pontuação)
+    const theme = currentTheme();
     const sky = ctx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, '#4ec0ca'); sky.addColorStop(1, '#9be3e8');
+    sky.addColorStop(0, theme.skyTop); sky.addColorStop(1, theme.skyBottom);
     ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    drawStars(ctx, W, H, theme.stars, time);
 
     // Nuvens (paralaxe lento)
-    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.fillStyle = theme.cloud;
     for (let i = 0; i < 4; i++) {
       const cx = ((i * 130 - time * 20) % (W + 120) + W + 120) % (W + 120) - 60;
       const cy = 80 + (i % 2) * 60;
@@ -139,7 +142,7 @@
     }
 
     // Prédios ao fundo
-    ctx.fillStyle = '#5cbd6a';
+    ctx.fillStyle = theme.building;
     for (let i = 0; i < 9; i++) {
       const bx = ((i * 60 - time * 40) % (W + 60) + W + 60) % (W + 60) - 30;
       const bh = 40 + ((i * 37) % 50);
@@ -176,6 +179,11 @@
     }
     if (state === STATE.DEAD) {
       overlay();
+      const medal = medalFor(score);
+      if (medal) {
+        drawMedal(ctx, W / 2, H / 2 - 135, 24, medal, time * 1000);
+        text(medal.name, W / 2, H / 2 - 172, 16, medal.color, '#333');
+      }
       panel(W / 2 - 120, H / 2 - 90, 240, 170);
       text('GAME OVER', W / 2, H / 2 - 50, 30, '#fff', '#b91c1c');
       text('Pontos', W / 2 - 55, H / 2, 14, '#8a6d3b', null);
